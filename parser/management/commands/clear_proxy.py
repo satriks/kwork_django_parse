@@ -8,7 +8,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
 
 
-        file_path = os.path.join(settings.BASE_DIR, 'assets', 'proxylist.json')
+        file_path = os.path.join(settings.BASE_DIR, 'parser', 'assets', 'proxylist.json')
         cleaner.run(file_path)
 
 

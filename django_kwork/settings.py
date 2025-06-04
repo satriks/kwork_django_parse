@@ -77,7 +77,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_kwork.wsgi.application'
 
-
+ALLOWED_HOSTS =['37.140.241.117']
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 

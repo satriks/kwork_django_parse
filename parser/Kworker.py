@@ -106,6 +106,7 @@ class Kworker:
                 self.controller[self.checking_proxy] += 1
                 self.count = 0
                 print('Ошибка в парсинге главной страницы. Перезапуск')
+                print(e)
         self.count = 1
         print('Запуск парсинга карточек ')
         self.create_link_dict()

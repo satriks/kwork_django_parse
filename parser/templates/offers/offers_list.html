@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Предложения</title>
+    <style>
+        .card {
+            border: 1px solid #ccc;
+            padding: 16px;
+            margin: 8px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Предложения</h1>
+    <div>
+        <label for="status">Фильтр по статусу:</label>
+        <select id="status" onchange="filterOffers()">
+            <option value="">Все</option>
+            <option value="new">Новое</option>
+            <option value="interesting">Интересно</option>
+            <option value="not_interesting">Не интересно</option>
+        </select>
+    </div>
+    <div id="offers">
+        {% for offer in offers %}
+            <div class="card">
+                <h2>{{ offer.title }}</h2>
+                <p>{{ offer.description }}</p>
+                <p>Цена: {{ offer.cost }}</p>
+                <p>Статус: {{ offer.status }}</p>
+                <button onclick="changeStatus({{ offer.id }}, 'interesting')">Нравится</button>
+                <button onclick="changeStatus({{ offer.id }}, 'not_interesting')">Не нравится</button>
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+        function filterOffers() {
+            const status = document.getElementById('status').value;
+            window.location.href = '?status=' + status;
+        }
+        function changeStatus(offerId, newStatus) {
+            fetch(`/change-status/${offerId}/${newStatus}/`)
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Ошибка при изменении статуса');
+                    }
+                });
+        }
+    </script>
+</body>
+</html>

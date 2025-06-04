@@ -140,7 +140,7 @@ def check_selenium(driver):
 
 def write_working_proxies_to_file(proxies):
     """Записывает работающие прокси в файл."""
-    file_path = os.path.join(settings.BASE_DIR,'parser', 'assets', 'proxylist.json')
+    file_path = os.path.join(settings.BASE_DIR,'parser', 'assets', 'proxy.txt')
     output_file = file_path
 
     with open(output_file, 'a') as file:

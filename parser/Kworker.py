@@ -37,7 +37,7 @@ class Kworker:
         chrome_options = Options()
         chrome_options.add_argument(f'--proxy-server={proxy}')
         chrome_options.add_argument('--headless')  # Запуск в безголовом режиме
-        chrome_options.add_argument('--no-sandbox')  # Для некоторых систем, чтобы избежать ошибок
+        # chrome_options.add_argument('--no-sandbox')  # Для некоторых систем, чтобы избежать ошибок
         chrome_options.add_argument('--disable-dev-shm-usage')
         print("-" * 30)
         print(f"Запуск подключения {proxy}")

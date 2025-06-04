@@ -18,7 +18,7 @@ import time
 
 class Kworker:
     def __init__(self, url):
-        file_path = os.path.join(settings.BASE_DIR, 'assets', 'proxy.txt')
+        file_path = os.path.join(settings.BASE_DIR, 'parser', 'assets', 'proxy.txt')
         self.proxy_manager = Atum(file_path)
         self.url = url
         self.cards_url = []

@@ -135,81 +135,83 @@ class Kworker:
             raise ValueError(f"Ошибка при обработке задачи: {task}")
         print(f"Задача {task} успешно выполнена.")
 
-    def parsing_cards(self):
-        cards = []
-        all_offers = Offers.objects.all()
-        kwork_ids = [offer.kwork_id for offer in all_offers]
-        task_queue = queue.Queue()
-        test_dict = self.link_dict
-        ready = {key: value for key, value in test_dict.items() if int(key) in kwork_ids}
-        print(len(ready), "Карточки уже есть и были убраны ")
-        filtered_dict = {key: value for key, value in test_dict.items() if int(key) not in kwork_ids}
-
-        for i in filtered_dict.values():
-            task_queue.put(i)
-
-        def process_task(task):
-            print(f'Начал парсинг карточки {task}')
-            try:
-                card = self.card_parse(task)
-                self.save_card(card)
-                return card
-            except Exception as e:
-                print(f"Ошибка при обработке задачи {task}: {e}")
-                return None  # Возвращаем None в случае ошибки
-
-        # Используем ThreadPoolExecutor для выполнения задач в 6 потоках
-        with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
-            futures = []
-            while not task_queue.empty():
-                task = task_queue.get()
-                futures.append(executor.submit(process_task, task))
-                task_queue.task_done()  # Указываем, что задача обработана
-            for future in concurrent.futures.as_completed(futures):
-                result = future.result()
-                if result is not None:
-                    cards.append(result)
-                else:
-                    # Если задача не была успешно обработана, можно добавить её обратно в очередь
-                    task_queue.put(task)
-        print("Все задачи обработаны.")
-        return cards    # def parsing_cards(self):
-    #
+    # def parsing_cards(self):
     #     cards = []
     #     all_offers = Offers.objects.all()
     #     kwork_ids = [offer.kwork_id for offer in all_offers]
-    #
     #     task_queue = queue.Queue()
-    #
-    #
     #     test_dict = self.link_dict
-    #
     #     ready = {key: value for key, value in test_dict.items() if int(key) in kwork_ids}
     #     print(len(ready), "Карточки уже есть и были убраны ")
     #     filtered_dict = {key: value for key, value in test_dict.items() if int(key) not in kwork_ids}
-    #     # print(filtered_dict," фильтрованый дик")
+    #
     #     for i in filtered_dict.values():
     #         task_queue.put(i)
-    #     # Обрабатываем задачи из очереди
-    #     while not task_queue.empty():
-    #         print(f'Еще в обработаке : {task_queue.qsize()}')
-    #         task = task_queue.get()
-    #         print(f'Начал парсинг карточки {task}')
     #
+    #     def process_task(task):
+    #         print(f'Начал парсинг карточки {task}')
     #         try:
     #             card = self.card_parse(task)
-    #             cards.append(card)
     #             self.save_card(card)
+    #             return card
     #         except Exception as e:
-    #             # print(e)
-    #             print(f"Возвращаем задачу {task} обратно в очередь.")
-    #             task_queue.put(task)
-    #             self.controller[self.checking_proxy] += 1# Возвращаем задачу обратно в очередь
-    #         finally:
-    #             task_queue.task_done()  # Указываем, что задача обработана (даже если произошла ошибка)
+    #             print(f"Ошибка при обработке задачи {task}: {e}")
+    #             return None  # Возвращаем None в случае ошибки
     #
+    #     # Используем ThreadPoolExecutor для выполнения задач в 6 потоках
+    #     with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+    #         futures = []
+    #         while not task_queue.empty():
+    #             task = task_queue.get()
+    #             futures.append(executor.submit(process_task, task))
+    #             task_queue.task_done()  # Указываем, что задача обработана
+    #         for future in concurrent.futures.as_completed(futures):
+    #             result = future.result()
+    #             if result is not None:
+    #                 cards.append(result)
+    #             else:
+    #                 # Если задача не была успешно обработана, можно добавить её обратно в очередь
+    #                 task_queue.put(task)
     #     print("Все задачи обработаны.")
     #     return cards
+    #
+    def parsing_cards(self):
+
+        cards = []
+        all_offers = Offers.objects.all()
+        kwork_ids = [offer.kwork_id for offer in all_offers]
+
+        task_queue = queue.Queue()
+
+
+        test_dict = self.link_dict
+
+        ready = {key: value for key, value in test_dict.items() if int(key) in kwork_ids}
+        print(len(ready), "Карточки уже есть и были убраны ")
+        filtered_dict = {key: value for key, value in test_dict.items() if int(key) not in kwork_ids}
+        # print(filtered_dict," фильтрованый дик")
+        for i in filtered_dict.values():
+            task_queue.put(i)
+        # Обрабатываем задачи из очереди
+        while not task_queue.empty():
+            print(f'Еще в обработаке : {task_queue.qsize()}')
+            task = task_queue.get()
+            print(f'Начал парсинг карточки {task}')
+
+            try:
+                card = self.card_parse(task)
+                cards.append(card)
+                self.save_card(card)
+            except Exception as e:
+                # print(e)
+                print(f"Возвращаем задачу {task} обратно в очередь.")
+                task_queue.put(task)
+                self.controller[self.checking_proxy] += 1# Возвращаем задачу обратно в очередь
+            finally:
+                task_queue.task_done()  # Указываем, что задача обработана (даже если произошла ошибка)
+
+        print("Все задачи обработаны.")
+        return cards
 
 
 
